@@ -1,0 +1,4 @@
+[submodule "ring"]
+	path = ring
+	url = https://github.com/stanaka/ring.git
+	branch = fix-battery-level
