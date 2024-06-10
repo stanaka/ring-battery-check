@@ -23,8 +23,6 @@ jobs:
       - name: (submodule) npm run build
         working-directory: ./ring/packages/ring-client-api
         run: npm run build
-      - name: npm run build
-        run: npm run build
       - name: check battery lives
         env:
           GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
