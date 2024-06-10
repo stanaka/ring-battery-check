@@ -42,7 +42,7 @@ async function encryptSecret(publicKey: string, secretValue: string): Promise<st
 
 export const updateSecret = async (repo: string, secretName: string, secretValue: string) => {
     //try {
-        const publicKey = await getPublicKey(owner, repo);
+        const publicKey = await getPublicKey(repo);
         const key = publicKey.key;
         const key_id = publicKey.key_id;
 
