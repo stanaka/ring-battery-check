@@ -104,12 +104,14 @@ async function example() {
         return;
       }
 
-      const currentConfig = await promisify(readFile)(".env"),
-        updatedConfig = currentConfig
-          .toString()
-          .replace(oldRefreshToken, newRefreshToken);
+      if (existsSync(".env")) {
+        const currentConfig = await promisify(readFile)(".env"),
+          updatedConfig = currentConfig
+            .toString()
+            .replace(oldRefreshToken, newRefreshToken);
 
-      await promisify(writeFile)(".env", updatedConfig);
+        await promisify(writeFile)(".env", updatedConfig);
+      }
 
       const REPO = process.env.GITHUB_REPOSITORY || '';
       const SECRET_NAME = "RING_REFRESH_TOKEN";
