@@ -1,5 +1,6 @@
 name: Execute ring-battery-check
 on:
+  workflow_dispatch:
   schedule:
     - cron: "* 10 * * *"
 jobs:
