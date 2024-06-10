@@ -1,0 +1,29 @@
+name: Execute ring-battery-check
+on:
+  schedule:
+    - cron: "* 10 * * *"
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: setup node
+        uses: actions/setup-node@v4
+      - name: npm install
+        run: npm install
+      - name: (submodule) npm run build
+        working-directory: ./ring/packages/ring-client-api
+        run: npm run build
+      - name: npm run build
+        run: npm run build
+      - name: check battery lives
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
+          GOOGLE_SPREADSHEET_ID: ${{ secrets.GOOGLE_SPREADSHEET_ID }}
+          RING_REFRESH_TOKEN: ${{ secrets.RING_REFRESH_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrests._GITHUB_TOKEN }}
+        run: npm run start

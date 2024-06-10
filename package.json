@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "Example use of the `ring-client-api` npm package",
   "main": "lib/index.js",
+  "type": "module",
   "scripts": {
     "start": "npm run ts-battery-check",
     "auth": "node_modules/ring-client-api/lib/ring-auth-cli.js",
-    "ts-battery-check": "tsc && node lib/battery-check.js"
+    "ts-battery-check": "tsc && node lib/battery-check.js",
+    "ts-github-secrets": "tsc && node lib/github-secrets.js"
   },
   "repository": {
     "type": "git",
@@ -17,12 +19,16 @@
   },
   "homepage": "https://github.com/dgreif/ring-client-example#readme",
   "dependencies": {
+    "@octokit/auth-token": "^5.1.1",
+    "@octokit/request": "^9.1.1",
     "dotenv": "^16.0.3",
-    "ring-client-api": "file:./ring/packages/ring-client-api",
+    "google-auth-library": "^9.10.0",
     "google-spreadsheet": "^4.1.2",
-    "google-auth-library": "^9.10.0"
+    "libsodium-wrappers": "^0.7.13",
+    "ring-client-api": "file:./ring/packages/ring-client-api"
   },
   "devDependencies": {
+    "@types/libsodium-wrappers": "^0.7.14",
     "@types/ws": "^8.5.4",
     "typescript": "^4.9.5"
   }

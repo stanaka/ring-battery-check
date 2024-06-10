@@ -1,9 +1,10 @@
 import "dotenv/config";
 import { RingApi } from "ring-client-api";
-import { readFile, writeFile } from "fs";
+import { readFile, writeFile, existsSync } from "fs";
 import { promisify } from "util";
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from "google-spreadsheet";
 import { JWT } from "google-auth-library";
+import { updateSecret } from './github-secrets';
 
 const dataColumns = [
   'cocoa_doorbell/Front Door',
@@ -75,7 +76,9 @@ async function example() {
     locations = await ringApi.getLocations(),
     allCameras = await ringApi.getCameras();
 
-  const key = require('../' + env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON)
+  const key = existsSync('../' + env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON) ?
+    require('../' + env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON) :
+    env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON
 
   const sheet = await initSheet(key.client_email, key.private_key, env.GOOGLE_SPREADSHEET_ID!)
 
@@ -101,6 +104,10 @@ async function example() {
           .replace(oldRefreshToken, newRefreshToken);
 
       await promisify(writeFile)(".env", updatedConfig);
+
+      const REPO = process.env.GITHUB_REPOSITORY || '';
+      const SECRET_NAME = "RING_REFRESH_TOKEN";
+      updateSecret(REPO, SECRET_NAME, newRefreshToken);
 
       jobDoneCount += 1;
       if (jobDoneCount == 2){
