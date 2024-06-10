@@ -76,10 +76,16 @@ async function example() {
     locations = await ringApi.getLocations(),
     allCameras = await ringApi.getCameras();
 
-  const key = existsSync('../' + env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON) ?
-    require('../' + env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON) :
-    env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON
+  //const key = env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON_FILE ?
+  //  require('../' + env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON_FILE) :
+  //  env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON
+  // const key = require('../' + env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON_FILE)
+  const keyJson = env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON_FILE ?
+    await promisify(readFile)('./' + env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON_FILE) :
+    env.GOOGLE_SERVICE_ACCOUNT_KEY_JSON || ''
+  const key  = JSON.parse(keyJson.toString())
 
+  console.log("Initialize sheet with ", key.client_email)
   const sheet = await initSheet(key.client_email, key.private_key, env.GOOGLE_SPREADSHEET_ID!)
 
   console.log(

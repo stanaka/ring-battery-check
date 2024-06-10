@@ -19,8 +19,11 @@ interface PublicKeyResponse {
   key: string;
 }
 
-async function getPublicKey(repo: string): Promise<PublicKeyResponse> {
-    const response = await octokitRequestWithAuth('GET /repos/{repo}/actions/secrets/public-key', {
+async function getPublicKey(repository: string): Promise<PublicKeyResponse> {
+    const owner = repository.split('/')[0]
+    const repo = repository.split('/')[1]
+    const response = await octokitRequestWithAuth('GET /repos/{owner}/{repo}/actions/secrets/public-key', {
+        owner,
         repo
     });
     return response.data;
@@ -40,15 +43,19 @@ async function encryptSecret(publicKey: string, secretValue: string): Promise<st
     return Buffer.from(encryptedBytes).toString('base64');
 }
 
-export const updateSecret = async (repo: string, secretName: string, secretValue: string) => {
+export const updateSecret = async (repository: string, secretName: string, secretValue: string) => {
     //try {
-        const publicKey = await getPublicKey(repo);
+        const publicKey = await getPublicKey(repository);
         const key = publicKey.key;
         const key_id = publicKey.key_id;
 
         const encryptedValue = await encryptSecret(key, secretValue);
 
-        await octokitRequestWithAuth('PUT /repos/{repo}/actions/secrets/{secret_name}', {
+        const owner = repository.split('/')[0]
+        const repo = repository.split('/')[1]
+
+        await octokitRequestWithAuth('PUT /repos/{owner}/{repo}/actions/secrets/{secret_name}', {
+            owner,
             repo,
             secret_name: secretName,
             encrypted_value: encryptedValue,
