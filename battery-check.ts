@@ -4,7 +4,7 @@ import { readFile, writeFile, existsSync } from "fs";
 import { promisify } from "util";
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from "google-spreadsheet";
 import { JWT } from "google-auth-library";
-import { updateSecret } from './github-secrets';
+import { updateSecret } from './github-secrets.js';
 
 const dataColumns = [
   'cocoa_doorbell/Front Door',
